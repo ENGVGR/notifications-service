@@ -1,0 +1,19 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Notification {
+  id          String @id //@id - Primiry key
+  recipientId String //userId (Foreign Key)
+  content     String
+  category    String
+  readAt      DateTime?
+  createdAt   DateTime @default(now()) //Se não informar, pega a hora atual
+
+  @@index([recipientId]) //As notificações serão indexadas por Foreign key, ou seja, por usuário
+}
