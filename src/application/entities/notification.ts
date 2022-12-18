@@ -6,6 +6,7 @@ export interface NotificationProps {
   recipientId: string;
   content: Content /* Esse tipo foi criado no arquivo content.ts */;
   category: string;
+  canceledAt?: Date | null;
   readAt?: Date | null /* Fazer isso é o mesmo que dizer que readAt pode ser Date, undefined ou nulo (Se fosse apenas Date, só poderia ser undefined ou nulo). Com o null é possível tirar a informação Date do readAt. O undefined é quando não foi informado o Date*/;
   createdAt: Date;
 }
@@ -16,8 +17,12 @@ export class Notification {
 
   /* Ai criar uma instância da classe, é passado os props e aqui eles são atribuidos ao props da classe */
   /* O Replace foi criado em helpers e permiter que os tipos sejam alterados. Dessa forma o createdAt continua sendo obrigatório existir, mas não precisa ser fornecio como parâmetro */
-  constructor(props: Replace<NotificationProps, { createdAt?: Date }>) {
+  constructor(
+    props: Replace<NotificationProps, { createdAt?: Date }>,
+    id?: string,
+  ) {
     this._id =
+      id ??
       randomUUID(); /* Tem como transformar isso em uma classe, para sempre randorizar um id e extender nessa classe e em outras que terão id */
     this.props = {
       ...props,
@@ -53,12 +58,24 @@ export class Notification {
     return this.props.category;
   }
 
-  public set readAt(readAt: Date | null | undefined) {
-    this.props.readAt = readAt;
+  public read() {
+    this.props.readAt = new Date();
+  }
+
+  public unRead() {
+    this.props.readAt = null;
   }
 
   public get readAt(): Date | null | undefined {
     return this.props.readAt;
+  }
+
+  public cancel() {
+    this.props.canceledAt = new Date();
+  }
+
+  public get canceledAt(): Date | null | undefined {
+    return this.props.canceledAt;
   }
 
   public get createdAt(): Date {

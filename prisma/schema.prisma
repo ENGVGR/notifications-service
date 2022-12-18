@@ -13,6 +13,7 @@ model Notification {
   content     String
   category    String
   readAt      DateTime?
+  canceledAt  DateTime?
   createdAt   DateTime @default(now()) //Se não informar, pega a hora atual
 
   @@index([recipientId]) //As notificações serão indexadas por Foreign key, ou seja, por usuário
